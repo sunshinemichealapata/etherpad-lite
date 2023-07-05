@@ -104,7 +104,7 @@ const doImport = async (req, res, padId, authorId) => {
         logger.warn('Import failed because form had no file');
         return reject(new ImportError('uploadFailed'));
       }
-      resolve(files.file.filepath);
+      resolve(files.file[0].filepath);
     });
   });
 
