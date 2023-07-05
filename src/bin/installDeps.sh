@@ -37,22 +37,18 @@ if [ ! -f "$settings" ]; then
   cp settings.json.template "$settings" || exit 1
 fi
 
+log "Linking src as new package ep_etherpad-lite"
+(cd ./src && npm link)
 
 log "Installing dependencies..."
-(mkdir -p node_modules &&
-cd node_modules &&
-{ [ -d ep_etherpad-lite ] || ln -sf ../src ep_etherpad-lite; } &&
-cd ep_etherpad-lite)
-
-cd src
-
-if [ -z "${ETHERPAD_PRODUCTION}" ]; then
-  log "Installing dev dependencies"
- npm ci --no-optional --omit=optional --include=dev --lockfile-version 1 || exit 1
-else
+if [ "$NODE_ENV" = "production" ]; then
   log "Installing production dependencies"
-  npm ci --no-optional --omit=optional --omit=dev --lockfile-version 1 --production || exit 1
+  npm link ep_etherpad-lite --omit=optional --omit=dev --save --package-lock=true || exit 1
+else
+  log "Installing dev dependencies"
+  npm link ep_etherpad-lite --omit=optional --save --package-lock=true || exit 1
 fi
+
 
 # Remove all minified data to force node creating it new
 log "Clearing minified cache..."
