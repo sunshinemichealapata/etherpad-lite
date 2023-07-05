@@ -37,6 +37,17 @@ if [ ! -f "$settings" ]; then
   cp settings.json.template "$settings" || exit 1
 fi
 
+log "Removing node_modules and src/node_modules."
+rm -rf ./node_modules || true
+rm -rf ./src/node_modules || true
+
+# TODO parse to print a list?
+if [ -f "./package.json" ] || [ -f "./package-lock.json" ]; then
+  rm ./package.json || true
+  rm ./package-lock.json || true
+  log "Please re-install your plugins manually."
+fi
+
 log "Linking src as new package ep_etherpad-lite"
 (cd ./src && npm link)
 
