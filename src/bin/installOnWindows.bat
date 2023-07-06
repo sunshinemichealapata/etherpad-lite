@@ -10,11 +10,9 @@ echo _
 echo Ensure that all dependencies are up to date...  If this is the first time you have run Etherpad please be patient.
 
 echo Deleting old node_modules and src/node_modules
-del /s node_modules
-del /s src/node_modules
-echo Deleting old package.json and package-lock.json
-del /s package.json
-del /s package-lock.json
+del /s /q .\node_modules
+del /s /q .\src\node_modules
+
 
 cd /D src
 cmd /C npm link || exit /B 1
@@ -27,6 +25,8 @@ del /S var\minified*
 
 echo _
 echo Setting up settings.json...
+
+cd  ..
 IF NOT EXIST settings.json (
   echo Can't find settings.json.
   echo Copying settings.json.template...
